@@ -1,5 +1,6 @@
 package in.ybuilds.veritrust.backend.model;
 
+import in.ybuilds.veritrust.backend.util.NumericBooleanConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,9 +59,8 @@ public class Institution {
     )
     private String country;
 
-    @Column(
-            nullable = false
-    )
+    @Column(name = "verified")
+    @Convert(converter = NumericBooleanConverter.class)
     private boolean verified;
 
     @Column(

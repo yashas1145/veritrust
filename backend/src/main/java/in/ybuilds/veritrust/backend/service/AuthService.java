@@ -3,6 +3,8 @@ package in.ybuilds.veritrust.backend.service;
 import in.ybuilds.veritrust.backend.dto.request.LoginRequest;
 import in.ybuilds.veritrust.backend.dto.request.RegisterRequest;
 import in.ybuilds.veritrust.backend.dto.response.AuthResponse;
+import in.ybuilds.veritrust.backend.exception.AuthenticationException;
+import in.ybuilds.veritrust.backend.model.Role;
 import in.ybuilds.veritrust.backend.model.User;
 import in.ybuilds.veritrust.backend.repository.UserRepository;
 import in.ybuilds.veritrust.backend.security.JwtService;
@@ -21,7 +23,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException(
+            throw new AuthenticationException(
                     "Email already registered"
             );
         }
@@ -32,7 +34,7 @@ public class AuthService {
         user.setPasswordHash(
                 passwordEncoder.encode(request.getPassword())
         );
-        user.setRole(request.getRole());
+        user.setRole(Role.STUDENT);
 
         user = userRepository.save(user);
 
@@ -50,7 +52,7 @@ public class AuthService {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
+                        new AuthenticationException(
                                 "Invalid email or password"
                         )
                 );
@@ -59,7 +61,7 @@ public class AuthService {
                 request.getPassword(),
                 user.getPasswordHash()
         )) {
-            throw new IllegalArgumentException(
+            throw new AuthenticationException(
                     "Invalid email or password"
             );
         }
