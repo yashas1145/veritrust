@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: veritrust-backend
+
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
+    username: veritrust
+    password: ${DB_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 3600000
