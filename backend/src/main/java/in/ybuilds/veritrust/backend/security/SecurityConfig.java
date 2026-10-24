@@ -3,7 +3,9 @@ package in.ybuilds.veritrust.backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,20 +24,20 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/institutions/register"
-                        ).permitAll()
-                        .requestMatchers(
-                                "/api/credentials/**"
-                        ).hasRole("INSTITUTION")
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/institutions/register").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/credentials/**").hasAnyRole("INSTITUTION", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/blockchain/credentials/*/active").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/blockchain/credentials/*/status").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/blockchain/credentials/issue").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

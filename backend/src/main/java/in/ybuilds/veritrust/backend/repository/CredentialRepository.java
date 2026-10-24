@@ -4,6 +4,7 @@ import in.ybuilds.veritrust.backend.model.Credential;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,5 +13,7 @@ public interface CredentialRepository
 
     Optional<Credential> findByCredentialId(String credentialId);
 
-    boolean existsByCredentialId(String credentialId);
+    List<Credential> findByStudentId(Long studentId);
+
+    List<Credential> findByInstitutionId(Long institutionId);
 }

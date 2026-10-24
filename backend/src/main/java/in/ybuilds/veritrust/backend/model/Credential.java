@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -90,6 +91,39 @@ public class Credential {
             nullable = false
     )
     private LocalDateTime updatedAt;
+
+    @Column(
+            name = "commitment",
+            nullable = false,
+            length = 66
+    )
+    private String commitment;
+
+    @Column(
+            name = "blockchain_tx_hash",
+            nullable = false,
+            length = 66
+    )
+    private String blockchainTxHash;
+
+    @Column(
+            name = "blockchain_issuer",
+            nullable = false,
+            length = 42
+    )
+    private String blockchainIssuer;
+
+    @Column(
+            name = "blockchain_block_number",
+            nullable = false
+    )
+    private BigInteger blockchainBlockNumber;
+
+    @Column(name = "signature", length = 128)
+    private String signature;
+
+    @Column(name = "issuer_public_key", length = 100)
+    private String issuerPublicKey;
 
     @PrePersist
     protected void onCreate() {
